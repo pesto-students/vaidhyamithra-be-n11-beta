@@ -1,0 +1,24 @@
+{
+  "name": "vaidhyamithra-be-n11-beta",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pesto-students/vaidhyamithra-be-n11-beta.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pesto-students/vaidhyamithra-be-n11-beta/issues"
+  },
+  "homepage": "https://github.com/pesto-students/vaidhyamithra-be-n11-beta#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.15"
+  }
+}
