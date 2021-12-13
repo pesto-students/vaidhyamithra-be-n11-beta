@@ -39,6 +39,9 @@ mongoose
 const loginRoutes = require("./routes/login.routes");
 loginRoutes(app);
 
+const blogRoutes = require("./routes/blog.routes");
+blogRoutes(app);
+
 const port = process.env.PORT || 3553;
 app.set("port", port);
 

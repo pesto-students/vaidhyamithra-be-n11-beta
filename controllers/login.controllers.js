@@ -3,7 +3,7 @@ const User = require('../models/user.model.js');
 var bcrypt = require("bcryptjs");
 var jwt = require('jsonwebtoken');
 
-exports.createUser = (req, res) => {
+exports.signUp = (req, res) => {
   if (!req.body.email) {
     return res.status(400).send({
       message: "User can not be empty",
@@ -29,7 +29,7 @@ exports.createUser = (req, res) => {
     });
 };
 
-exports.loginChecker = (req, res) => {
+exports.login = (req, res) => {
   var username = req.body.name;
   var password = req.body.password;
   User.findOne({$or:[{name:username}]})
