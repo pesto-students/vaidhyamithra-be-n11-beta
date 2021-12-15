@@ -1,7 +1,7 @@
 module.exports = (app) => {
     const blogController = require('../controllers/blog.controller');
 
-    app.get('/blogById/:id', blogController.getBlogById);
+    app.get('/blog/:id', blogController.getBlogById);
 
     app.post('/blogsByTags', blogController.getBlogsByTags);
 

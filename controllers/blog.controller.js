@@ -1,41 +1,44 @@
 const Blog = require("../models/blog.model");
 
 exports.getBlogById = (req, res) => {
-  Blog.findById(req.params.id)
-    .then((blog) => {
-      if (!blog)
-        return res.status(404).send({
-          message: "Blog not found with the id:" + req.params.id,
-        });
-      res.send(blog);
-    })
-    .catch((error) => {
-      return res.status(500).send({ message: error });
-    });
+  var blogId = req.params.id;
+  try {
+    const blog = await Blog.findById(req.params.id);
+    if (!blog)
+      return (
+        res.status(500),
+        send({ message: "Blog not found with the id:" + blogId })
+      );
+    res.status(200).send(blog);
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
 };
 
-exports.getBlogsByTags = (req, res) => {
+exports.getBlogsByTags = async (req, res) => {
   var tags = req.body.tags;
-  if(!tags)
-    return res.status(500).send({message:"Not a valid tags"});
-
-  Blog.find({ tags: {$in : tags} })
-    .then((blogs) => {
-      if (!blogs)
-        return res.status(404).send({ message: "Blogs are not found" });
-      res.status(200).send(blogs);
-    })
-    .catch((error) => {
-      return res.status(500).send({ message: error });
-    });
+  if (!tags) return res.status(500).send({ message: "Not a valid tags" });
+  try {
+    const blogs = await Blog.find({ tags: { $in: tags } });
+    if (!blogs) return res.status(404).send({ message: "Blogs are not found" });
+    res.status(200).send(blogs);
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
 };
 
 exports.getBlogsByAuthor = (req, res) => {
   var authorId = req.body.authorId;
-  Blog.find({ authorId: authorId }).then((blogs) => {
-    if (!blogs) return res.status(404).send({ message: "Blogs are not found" });
+  try {
+    const blogs = await Blog.find({ authorId: authorId });
+    if (!blogs)
+      return res
+        .status(404)
+        .send({ message: "Blogs are not found with the AuthorId:", authorId });
     res.status(200).send(blogs);
-  });
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
 };
 
 exports.insertBlog = (req, res) => {
@@ -58,29 +61,25 @@ exports.insertBlog = (req, res) => {
 };
 
 exports.updateBlog = (req, res) => {
-    const blog = new Blog({
-        _id: req.params.blogId,
-        title: req.body.title,
-        content: req.body.content,
-        authorId: req.body.authorId,
-        tags: req.body.tags,
-        status: req.body.status,
-    });
+  const blog = new Blog({
+    _id: req.params.blogId,
+    title: req.body.title,
+    content: req.body.content,
+    authorId: req.body.authorId,
+    tags: req.body.tags,
+    status: req.body.status,
+  });
 
-    Blog.findByIdAndUpdate(
-        req.params.blogId,
-        blog,
-        {new: true}
-    )
+  Blog.findByIdAndUpdate(req.params.blogId, blog, { new: true })
     .then((resultBlog) => {
-        if(!resultBlog)
-        {
-            return res.status(404).send({message: "Blog not found with the id:" + req.params.blogId});
-        }
-        res.send(resultBlog);
+      if (!resultBlog) {
+        return res
+          .status(404)
+          .send({ message: "Blog not found with the id:" + req.params.blogId });
+      }
+      res.send(resultBlog);
     })
     .catch((error) => {
-        res.status(500).send({message: error});
-    })
-}
-
+      res.status(500).send({ message: error });
+    });
+};
