@@ -1,6 +1,6 @@
 module.exports = (app) => {
     const loginController = require('../controllers/login.controllers');
 
-    app.post('/signup', loginController.createUser);
-    app.post('/login',loginController.loginChecker);
+    app.post('/signup', loginController.signUp);
+    app.post('/login',loginController.login);
 }
