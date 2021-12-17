@@ -1,6 +1,6 @@
 const Blog = require("../models/blog.model");
 
-exports.getBlogById = (req, res) => {
+exports.getBlogById = async (req, res) => {
   var blogId = req.params.id;
   try {
     const blog = await Blog.findById(req.params.id);
@@ -27,7 +27,7 @@ exports.getBlogsByTags = async (req, res) => {
   }
 };
 
-exports.getBlogsByAuthor = (req, res) => {
+exports.getBlogsByAuthor = async (req, res) => {
   var authorId = req.body.authorId;
   try {
     const blogs = await Blog.find({ authorId: authorId });

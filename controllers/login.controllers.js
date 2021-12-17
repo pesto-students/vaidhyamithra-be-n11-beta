@@ -30,9 +30,9 @@ exports.signUp = (req, res) => {
 };
 
 exports.login = (req, res) => {
-  var username = req.body.name;
+  var email = req.body.email;
   var password = req.body.password;
-  User.findOne({$or:[{name:username}]})
+  User.findOne({$or:[{email:email}]})
   .then(user => {
     if(!user)
     {
