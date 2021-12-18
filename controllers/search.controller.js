@@ -7,7 +7,7 @@ exports.search = async (req, res) => {
   const skipIndex = (page - 1) * limit;
   const results = {};
   try {
-    results.searchResults = await Blog.aggregate([
+    let searchResults = await Blog.aggregate([
       {
         $search: {
           index: 'blogIndex',
@@ -24,6 +24,9 @@ exports.search = async (req, res) => {
       .limit(limit)
       .skip(skipIndex)
       .exec();
+    let totalCount = await Blog.find({}).count();
+    results.searchResults = searchResults;
+    results.totalCount = totalCount;
     res.status(200).send(results);
   } catch (error) {
     res.status(500).send({
