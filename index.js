@@ -42,6 +42,9 @@ loginRoutes(app);
 const blogRoutes = require("./routes/blog.routes");
 blogRoutes(app);
 
+const searchRoutes = require("./routes/search.routes");
+searchRoutes(app);
+
 const port = process.env.PORT || 3553;
 app.set("port", port);
 

@@ -13,6 +13,7 @@ exports.signUp = (req, res) => {
   const user = new User({
     name: req.body.name,
     email: req.body.email,
+    isDoctor: req.body.isDoctor,
     password: bcrypt.hashSync(req.body.password, 8)
   });
 
@@ -30,9 +31,9 @@ exports.signUp = (req, res) => {
 };
 
 exports.login = (req, res) => {
-  var username = req.body.name;
+  var email = req.body.email;
   var password = req.body.password;
-  User.findOne({$or:[{name:username}]})
+  User.findOne({$or:[{email:email}]})
   .then(user => {
     if(!user)
     {
@@ -50,6 +51,7 @@ exports.login = (req, res) => {
     res.status(200).send({
         id: user.id,
         userName: user.name,
+        isDoctor: user.isDoctor,
         accessToken: token
     })
   })
