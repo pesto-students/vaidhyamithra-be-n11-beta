@@ -1,13 +1,25 @@
+const authJwt = require("../config/authJwt");
+
 module.exports = (app) => {
-    const blogController = require('../controllers/blog.controller');
+  const blogController = require("../controllers/blog.controller");
 
-    app.get('/blog/:id', blogController.getBlogById);
+  app.get("/blog/:id", blogController.getBlogById);
 
-    app.post('/blogsByTags', blogController.getBlogsByTags);
+  app.post("/blogsByTags", blogController.getBlogsByTags);
 
-    app.get('/blogsByAuthor', blogController.getBlogsByAuthor);
+  app.get(
+    "/blogsByAuthor/:id",
+    [authJwt.verifyToken],
+    blogController.getBlogsByAuthor
+  );
 
-    app.post('/blog', blogController.insertBlog);
+  app.post("/blog", 
+    [authJwt.verifyToken], 
+    blogController.insertBlog
+  );
 
-    app.put('/blog/:blogId', blogController.updateBlog);
-}
+  app.put("/blog/:blogId", 
+    [authJwt.verifyToken], 
+    blogController.updateBlog
+  );
+};
