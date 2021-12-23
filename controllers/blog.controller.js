@@ -6,7 +6,7 @@ exports.getBlogById = async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     if (!blog)
       return (
-        res.status(500),
+        res.status(500).
         send({ message: "Blog not found with the id:" + blogId })
       );
     res.status(200).send(blog);
