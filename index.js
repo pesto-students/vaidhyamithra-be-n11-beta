@@ -1,15 +1,15 @@
 const express = require("express");
-const cors = require('cors');
+const cors = require("cors");
 const mongoose = require("mongoose");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 const dbConfig = require("./config/database.config.js");
 
 const app = express();
 const corsOptions = {
-  origin: '*'
-}
+  origin: "*",
+};
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
 // app.use(function(req, res, next) {
@@ -44,6 +44,9 @@ blogRoutes(app);
 
 const searchRoutes = require("./routes/search.routes");
 searchRoutes(app);
+
+const tagRoutes = require("./routes/tag.routes");
+tagRoutes(app);
 
 const port = process.env.PORT || 3553;
 app.set("port", port);
