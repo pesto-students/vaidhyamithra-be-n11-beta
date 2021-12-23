@@ -26,7 +26,7 @@ exports.search = async (req, res) => {
       },
       {
         $addFields: {
-          total: {
+          totalCount: {
             $ifNull: [{ $arrayElemAt: ["$totalCount.count", 0] }, 0],
           },
         },

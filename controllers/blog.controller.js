@@ -1,25 +1,62 @@
 const Blog = require("../models/blog.model");
+const mongoose = require("mongoose");
 
 exports.getBlogById = async (req, res) => {
-  var blogId = req.params.id;
+  var blogId = requireObjectId(req.params.id);
   try {
-    const blog = await Blog.findById(req.params.id);
+    const blog = await Blog.aggregate(getQuery({ _id: blogId }));
     if (!blog)
-      return (
-        res.status(500).
-        send({ message: "Blog not found with the id:" + blogId })
-      );
+      return res
+        .status(500)
+        .send({ message: "Blog not found with the id:" + blogId });
     res.status(200).send(blog);
   } catch (error) {
     res.status(500).send({ message: error });
   }
 };
 
+const requireObjectId = (id) => {
+  return mongoose.Types.ObjectId(id);
+};
+
+const getQuery = (matchCondition) => {
+  return [
+    {
+      $match: matchCondition,
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "authorId",
+        foreignField: "_id",
+        as: "authorDetails",
+      },
+    },
+    {
+      $unwind: "$authorDetails",
+    },
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        content: 1,
+        authorId: 1,
+        tags: 1,
+        status: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        "authorDetails._id": 1,
+        "authorDetails.name": 1,
+      },
+    },
+  ];
+};
+
 exports.getBlogsByTags = async (req, res) => {
   var tags = req.body.tags;
   if (!tags) return res.status(500).send({ message: "Not a valid tags" });
   try {
-    const blogs = await Blog.find({ tags: { $in: tags } });
+    const blogs = await Blog.aggregate(getQuery({ tags: { $in: tags } }));
     if (!blogs) return res.status(404).send({ message: "Blogs are not found" });
     res.status(200).send(blogs);
   } catch (error) {
@@ -28,9 +65,9 @@ exports.getBlogsByTags = async (req, res) => {
 };
 
 exports.getBlogsByAuthor = async (req, res) => {
-  var authorId = req.body.authorId;
+  var authorId = requireObjectId(req.body.authorId);
   try {
-    const blogs = await Blog.find({ authorId: authorId });
+    const blogs = await Blog.aggregate(getQuery({ authorId: authorId }));
     if (!blogs)
       return res
         .status(404)
