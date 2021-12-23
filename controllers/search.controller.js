@@ -34,7 +34,7 @@ exports.search = async (req, res) => {
       {
         $project: {
           paginatedResults: 1,
-          total: 1,
+          totalCount: 1,
         },
       },
     ]);

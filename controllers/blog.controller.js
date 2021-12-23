@@ -52,8 +52,8 @@ exports.insertBlog = (req, res) => {
 
   blog
     .save()
-    .then(() => {
-      res.status(200).send({ Message: "Blog created successfully" });
+    .then((savedBlog) => {
+      res.status(200).send(savedBlog);
     })
     .catch((error) => {
       res.status(500).send({ message: error.message });

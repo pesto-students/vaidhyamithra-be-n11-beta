@@ -3,12 +3,23 @@ const User = require('../models/user.model.js');
 var bcrypt = require("bcryptjs");
 var jwt = require('jsonwebtoken');
 
-exports.signUp = (req, res) => {
+exports.signUp = async (req, res) => {
   if (!req.body.email) {
     return res.status(400).send({
-      message: "User can not be empty",
+      message: "User details can not be empty",
     });
   }
+
+  try{
+    let user = await User.findOne({email: req.body.email});
+    if(user)
+    return res.status(400).send({message: "Already exists in Vaidhyamitra, please login"});
+  }
+  catch (error) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while creating the User.",
+    });
+  };
 
   const user = new User({
     name: req.body.name,
@@ -16,18 +27,23 @@ exports.signUp = (req, res) => {
     isDoctor: req.body.isDoctor,
     password: bcrypt.hashSync(req.body.password, 8)
   });
-
   // Save User in the database
-  user
-    .save()
-    .then((data) => {
-      res.status(200).send({message:"User Created Successfully"});
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while creating the User.",
-      });
+  try {
+    let savedData = await user.save();
+    var token = jwt.sign({id: savedData._id}, keyConfig.secret_key, {expiresIn:7200});
+    res.status(200).send({
+      id: savedData._id,  
+      userName: savedData.name,
+      email: savedData.email,
+      isDoctor: savedData.isDoctor,
+      accessToken: token
     });
+  }
+  catch (error) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while creating the User.",
+    });
+  }
 };
 
 exports.login = (req, res) => {
@@ -51,6 +67,7 @@ exports.login = (req, res) => {
     res.status(200).send({
         id: user.id,
         userName: user.name,
+        email: user.email,
         isDoctor: user.isDoctor,
         accessToken: token
     })
