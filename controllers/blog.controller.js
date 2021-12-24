@@ -2,13 +2,17 @@ const Blog = require("../models/blog.model");
 const mongoose = require("mongoose");
 
 exports.getBlogById = async (req, res) => {
-  var blogId = requireObjectId(req.params.id);
-  if (!blogId) return res.status(500).send({ message: "Invalid blog id" });
+  try {
+    var blogId = requireObjectId(req.params.id);
+  } catch (error) {
+    return res.status(404).send({ message: "Invalid blog Id" });
+  }
+
   try {
     const blog = await Blog.aggregate(getQuery({ _id: blogId }));
-    if (!blog)
+    if (blog.length === 0)
       return res
-        .status(500)
+        .status(404)
         .send({ message: "Blog not found with the id:" + blogId });
     res.status(200).send(blog);
   } catch (error) {
@@ -17,11 +21,7 @@ exports.getBlogById = async (req, res) => {
 };
 
 const requireObjectId = (id) => {
-  try {
-    return mongoose.Types.ObjectId(id);
-  } catch (error) {
-    return error;
-  }
+  return mongoose.Types.ObjectId(id);
 };
 
 const getQuery = (matchCondition) => {
