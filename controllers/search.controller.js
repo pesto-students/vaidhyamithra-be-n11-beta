@@ -19,6 +19,31 @@ exports.search = async (req, res) => {
         },
       },
       {
+        $lookup: {
+          from: "users",
+          localField: "authorId",
+          foreignField: "_id",
+          as: "authorDetails",
+        },
+      },
+      {
+        $unwind: "$authorDetails",
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          content: 1,
+          authorId: 1,
+          tags: 1,
+          status: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          "authorDetails._id": 1,
+          "authorDetails.name": 1,
+        },
+      },
+      {
         $facet: {
           paginatedResults: [{ $skip: skipIndex }, { $limit: limit }],
           totalCount: [{ $count: "count" }],
