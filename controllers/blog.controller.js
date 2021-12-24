@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 
 exports.getBlogById = async (req, res) => {
   var blogId = requireObjectId(req.params.id);
+  if (!blogId) return res.status(500).send({ message: "Invalid blog id" });
   try {
     const blog = await Blog.aggregate(getQuery({ _id: blogId }));
     if (!blog)
@@ -16,7 +17,11 @@ exports.getBlogById = async (req, res) => {
 };
 
 const requireObjectId = (id) => {
-  return mongoose.Types.ObjectId(id);
+  try {
+    return mongoose.Types.ObjectId(id);
+  } catch (error) {
+    return error;
+  }
 };
 
 const getQuery = (matchCondition) => {
