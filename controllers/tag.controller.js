@@ -1,5 +1,15 @@
 const Tag = require("../models/tag.model");
 
+exports.getAllTags = async (req,res) => {
+  try{
+    const tags = await Tag.find();
+    res.status(200).send(tags);
+  }
+  catch(error) {  
+    res.status(500).send({message:error});
+  }
+};
+
 exports.getTagById = async (req, res) => {
   var tagId = req.params.id;
   try {

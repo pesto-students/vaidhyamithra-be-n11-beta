@@ -1,4 +1,5 @@
 const Blog = require("../models/blog.model");
+const BookMark = require("../models/bookMark.model");
 const mongoose = require("mongoose");
 
 exports.getBlogById = async (req, res) => {
@@ -71,8 +72,9 @@ exports.getBlogsByTags = async (req, res) => {
 
 exports.getBlogsByAuthor = async (req, res) => {
   var authorId = requireObjectId(req.body.authorId);
+  var status = req.body.status ? req.body.status : "Published";
   try {
-    const blogs = await Blog.aggregate(getQuery({ authorId: authorId }));
+    const blogs = await Blog.aggregate(getQuery({ $and: [{authorId: authorId}, {status: status}]}));
     if (!blogs)
       return res
         .status(404)
@@ -125,3 +127,88 @@ exports.updateBlog = (req, res) => {
       res.status(500).send({ message: error });
     });
 };
+
+exports.getSavedBlogs = async(req,res) => {
+  var userId = requireObjectId(req.params.userId);
+  if(!userId)
+    res.status(500).send({message:"Invalid userId:", userId});
+  try {
+    const blogs = await BookMark.aggregate([
+      {
+        $match: {userId: userId}
+      },
+      {
+        $lookup: {
+          from:"blogs",
+          localField:"blogId",
+          foreignField:"_id",
+          as:"blogDetails"
+        },
+      },
+      {
+        $unwind: "$blogDetails"
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField:"blogDetails.authorId",
+          foreignField:"_id",
+          as: "blogDetails.authorDetails"
+        },
+      },
+      {
+        $unwind: "$blogDetails.authorDetails"
+      },
+      {
+        $project: {
+          _id: 1,
+          "blogDetails._id":1,
+          "blogDetails.title":1,
+          "blogDetails.content":1,
+          "blogDetails.authorId":1,
+          "blogDetails.tags":1,
+          "blogDetails.status": 1,
+          "blogDetails.createdAt":1,
+          "blogDetails.updatedAt":1,
+          "blogDetails.authorDetails._id": 1,
+          "blogDetails.authorDetails.name": 1
+        }
+      }
+    ]);
+    res.status(200).send(blogs);
+  }
+  catch(error) {
+    res.status(500).send({message: error});
+  }
+}
+
+exports.getAuthorTags = async(req,res) => {
+  var authorId = requireObjectId(req.params.authorId);
+  try {
+    const tags = await Blog.aggregate([
+      {
+        $match: {$and: [{authorId: authorId}, {status: "Published"}]}
+      },
+      {
+        $unwind: "$tags"
+      },
+      {
+        $project:{
+          _id: 0,
+          tags: 1
+        }
+      }
+    ]);
+
+    let values = [];
+    tags.forEach(tag => {
+      values.push(tag.tags);
+    });
+    let uniqueKeys = [...new Set(values)];
+    
+    res.status(200).send(uniqueKeys);
+  }
+  catch(error) {
+    res.status(500).send({message:error});
+  }
+}

@@ -48,6 +48,9 @@ searchRoutes(app);
 const tagRoutes = require("./routes/tag.routes");
 tagRoutes(app);
 
+const bookMarkRoutes = require("./routes/bookMark.routes");
+bookMarkRoutes(app);
+
 const port = process.env.PORT || 3553;
 app.set("port", port);
 

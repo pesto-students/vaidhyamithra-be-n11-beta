@@ -7,19 +7,25 @@ module.exports = (app) => {
 
   app.post("/blogsByTags", blogController.getBlogsByTags);
 
-  app.get(
-    "/blogsByAuthor/:id",
+  app.post(
+    "/blogsByAuthor",
     [authJwt.verifyToken],
     blogController.getBlogsByAuthor
   );
 
-  app.post("/blog", 
-    [authJwt.verifyToken], 
-    blogController.insertBlog
+  app.post("/blog", [authJwt.verifyToken], blogController.insertBlog);
+
+  app.put("/blog/:blogId", [authJwt.verifyToken], blogController.updateBlog);
+
+  app.get(
+    "/getSavedBlogs/:userId",
+    [authJwt.verifyToken],
+    blogController.getSavedBlogs
   );
 
-  app.put("/blog/:blogId", 
-    [authJwt.verifyToken], 
-    blogController.updateBlog
-  );
+  app.get(
+    "/getTagsByAuthorId/:authorId",
+    [authJwt.verifyToken],
+    blogController.getAuthorTags
+  )
 };

@@ -3,7 +3,9 @@ const UserSchema = mongoose.Schema({
     name: String,
     email: String,
     password: String,
-    isDoctor: Boolean
+    isDoctor: Boolean,
+    aboutUser: String,
+    interests: [String]
 }, {
     timestamps: true
 });
