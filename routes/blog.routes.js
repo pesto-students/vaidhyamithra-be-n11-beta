@@ -7,10 +7,15 @@ module.exports = (app) => {
 
   app.post("/blogsByTags", blogController.getBlogsByTags);
 
-  app.post(
-    "/blogsByAuthor",
+  app.get(
+    "/blogsByAuthor/published/:authorId",
+    blogController.getPublishedBlogsByAuthor
+  );
+
+  app.get(
+    "/blogsByAuthor/draft/:authorId",
     [authJwt.verifyToken],
-    blogController.getBlogsByAuthor
+    blogController.getDraftBlogsByAuthor
   );
 
   app.post("/blog", [authJwt.verifyToken], blogController.insertBlog);

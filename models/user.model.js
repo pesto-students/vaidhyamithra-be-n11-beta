@@ -4,7 +4,7 @@ const UserSchema = mongoose.Schema({
     email: String,
     password: String,
     isDoctor: Boolean,
-    aboutUser: String,
+    about: String,
     interests: [String]
 }, {
     timestamps: true

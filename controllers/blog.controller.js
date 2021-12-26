@@ -70,11 +70,24 @@ exports.getBlogsByTags = async (req, res) => {
   }
 };
 
-exports.getBlogsByAuthor = async (req, res) => {
-  var authorId = requireObjectId(req.body.authorId);
-  var status = req.body.status ? req.body.status : "Published";
+exports.getPublishedBlogsByAuthor = async (req, res) => {
+  var authorId = requireObjectId(req.params.authorId);
   try {
-    const blogs = await Blog.aggregate(getQuery({ $and: [{authorId: authorId}, {status: status}]}));
+    const blogs = await Blog.aggregate(getQuery({ $and: [{authorId: authorId}, {status: "published"}]}));
+    if (!blogs)
+      return res
+        .status(404)
+        .send({ message: "Blogs are not found with the AuthorId:", authorId });
+    res.status(200).send(blogs);
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
+
+exports.getDraftBlogsByAuthor = async (req, res) => {
+  var authorId = requireObjectId(req.params.authorId);
+  try {
+    const blogs = await Blog.aggregate(getQuery({ $and: [{authorId: authorId}, {status: "draft"}]}));
     if (!blogs)
       return res
         .status(404)
@@ -187,7 +200,7 @@ exports.getAuthorTags = async(req,res) => {
   try {
     const tags = await Blog.aggregate([
       {
-        $match: {$and: [{authorId: authorId}, {status: "Published"}]}
+        $match: {$and: [{authorId: authorId}, {status: "published"}]}
       },
       {
         $unwind: "$tags"
