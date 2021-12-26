@@ -23,9 +23,5 @@ module.exports = (app) => {
     blogController.getSavedBlogs
   );
 
-  app.get(
-    "/getTagsByAuthorId/:authorId",
-    [authJwt.verifyToken],
-    blogController.getAuthorTags
-  )
+  app.get("/getTagsByAuthorId/:authorId", blogController.getAuthorTags);
 };
