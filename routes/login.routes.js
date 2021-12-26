@@ -6,7 +6,7 @@ module.exports = (app) => {
   app.post("/signup", loginController.signUp);
   app.post("/login", loginController.login);
 
-  app.get("/getUserInfo", loginController.getUserDetails);
+  app.get("/getUserInfo/:userId", loginController.getUserDetails);
 
   app.put(
     "/updateUserInfo",
