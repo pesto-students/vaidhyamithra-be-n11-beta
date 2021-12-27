@@ -12,7 +12,7 @@ module.exports = (app) => {
   );
   
   app.delete(
-    "/deleteComment",
+    "/deleteComment/:commentId",
     [authJwt.verifyToken],
     commentController.deleteComment
   );
