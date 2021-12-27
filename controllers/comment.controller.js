@@ -23,7 +23,7 @@ const getQuery = (matchCondition) => {
       $unwind: "$userDetails",
     },
     {
-        $sort: {createdAt: -1}
+      $sort: { createdAt: -1 },
     },
     {
       $project: {
@@ -36,7 +36,7 @@ const getQuery = (matchCondition) => {
         "userDetails._id": 1,
         "userDetails.name": 1,
       },
-    }
+    },
   ];
 };
 

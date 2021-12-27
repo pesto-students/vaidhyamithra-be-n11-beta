@@ -42,6 +42,9 @@ const getQuery = (matchCondition) => {
       $unwind: "$authorDetails",
     },
     {
+      $sort: { createdAt: -1 }
+    },
+    {
       $project: {
         _id: 1,
         title: 1,
@@ -58,6 +61,40 @@ const getQuery = (matchCondition) => {
   ];
 };
 
+exports.getAllBlogs = async(req,res) => {
+  const blogs = await Blog.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "authorId",
+        foreignField: "_id",
+        as: "authorDetails",
+      }
+    },
+    {
+      $unwind: "$authorDetails",
+    },
+    {
+      $sort: { createdAt: -1 }
+    },
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        content: 1,
+        authorId: 1,
+        tags: 1,
+        status: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        "authorDetails._id": 1,
+        "authorDetails.name": 1,
+      },
+    }
+  ]);
+  res.status(200).send(blogs);
+}
+
 exports.getBlogsByTags = async (req, res) => {
   var tags = req.body.tags;
   if (!tags) return res.status(500).send({ message: "Not a valid tags" });
@@ -73,7 +110,9 @@ exports.getBlogsByTags = async (req, res) => {
 exports.getPublishedBlogsByAuthor = async (req, res) => {
   var authorId = requireObjectId(req.params.authorId);
   try {
-    const blogs = await Blog.aggregate(getQuery({ $and: [{authorId: authorId}, {status: "published"}]}));
+    const blogs = await Blog.aggregate(
+      getQuery({ $and: [{ authorId: authorId }, { status: "published" }] })
+    );
     if (!blogs)
       return res
         .status(404)
@@ -87,7 +126,9 @@ exports.getPublishedBlogsByAuthor = async (req, res) => {
 exports.getDraftBlogsByAuthor = async (req, res) => {
   var authorId = requireObjectId(req.params.authorId);
   try {
-    const blogs = await Blog.aggregate(getQuery({ $and: [{authorId: authorId}, {status: "draft"}]}));
+    const blogs = await Blog.aggregate(
+      getQuery({ $and: [{ authorId: authorId }, { status: "draft" }] })
+    );
     if (!blogs)
       return res
         .status(404)
@@ -141,87 +182,84 @@ exports.updateBlog = (req, res) => {
     });
 };
 
-exports.getSavedBlogs = async(req,res) => {
+exports.getSavedBlogs = async (req, res) => {
   var userId = requireObjectId(req.params.userId);
-  if(!userId)
-    res.status(500).send({message:"Invalid userId:", userId});
+  if (!userId) res.status(500).send({ message: "Invalid userId:", userId });
   try {
     const blogs = await BookMark.aggregate([
       {
-        $match: {userId: userId}
+        $match: { userId: userId },
       },
       {
         $lookup: {
-          from:"blogs",
-          localField:"blogId",
-          foreignField:"_id",
-          as:"blogDetails"
+          from: "blogs",
+          localField: "blogId",
+          foreignField: "_id",
+          as: "blogDetails",
         },
       },
       {
-        $unwind: "$blogDetails"
+        $unwind: "$blogDetails",
       },
       {
         $lookup: {
           from: "users",
-          localField:"blogDetails.authorId",
-          foreignField:"_id",
-          as: "blogDetails.authorDetails"
+          localField: "blogDetails.authorId",
+          foreignField: "_id",
+          as: "blogDetails.authorDetails",
         },
       },
       {
-        $unwind: "$blogDetails.authorDetails"
+        $unwind: "$blogDetails.authorDetails",
       },
       {
         $project: {
           _id: 1,
-          "blogDetails._id":1,
-          "blogDetails.title":1,
-          "blogDetails.content":1,
-          "blogDetails.authorId":1,
-          "blogDetails.tags":1,
+          "blogDetails._id": 1,
+          "blogDetails.title": 1,
+          "blogDetails.content": 1,
+          "blogDetails.authorId": 1,
+          "blogDetails.tags": 1,
           "blogDetails.status": 1,
-          "blogDetails.createdAt":1,
-          "blogDetails.updatedAt":1,
+          "blogDetails.createdAt": 1,
+          "blogDetails.updatedAt": 1,
           "blogDetails.authorDetails._id": 1,
-          "blogDetails.authorDetails.name": 1
-        }
-      }
+          "blogDetails.authorDetails.name": 1,
+        },
+      },
     ]);
     res.status(200).send(blogs);
+  } catch (error) {
+    res.status(500).send({ message: error });
   }
-  catch(error) {
-    res.status(500).send({message: error});
-  }
-}
+};
 
-exports.getAuthorTags = async(req,res) => {
+exports.getAuthorTags = async (req, res) => {
   var authorId = requireObjectId(req.params.authorId);
   try {
     const tags = await Blog.aggregate([
       {
-        $match: {$and: [{authorId: authorId}, {status: "published"}]}
+        $match: { $and: [{ authorId: authorId }, { status: "published" }] },
       },
       {
-        $unwind: "$tags"
+        $unwind: "$tags",
       },
       {
-        $project:{
+        $project: {
           _id: 0,
-          tags: 1
-        }
-      }
+          tags: 1,
+        },
+      },
     ]);
 
     let values = [];
-    tags.forEach(tag => {
+    tags.forEach((tag) => {
       values.push(tag.tags);
     });
     let uniqueKeys = [...new Set(values)];
-    
+
     res.status(200).send(uniqueKeys);
+  } catch (error) {
+    res.status(500).send({ message: error });
   }
-  catch(error) {
-    res.status(500).send({message:error});
-  }
-}
+};
