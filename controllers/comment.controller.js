@@ -56,7 +56,7 @@ exports.insertComment = async (req, res) => {
   });
   try {
     comment.save().then((savedComment) => {
-      Comment.aggregate(getQuery({ userId: savedComment.userId })).then(
+      Comment.aggregate(getQuery({ blogId: savedComment.blogId })).then(
         (comments) => {
           res.status(200).send(comments);
         }
