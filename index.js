@@ -51,6 +51,9 @@ tagRoutes(app);
 const bookMarkRoutes = require("./routes/bookMark.routes");
 bookMarkRoutes(app);
 
+const commentRoutes = require("./routes/comment.routes");
+commentRoutes(app);
+
 const port = process.env.PORT || 3553;
 app.set("port", port);
 
