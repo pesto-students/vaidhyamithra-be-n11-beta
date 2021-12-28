@@ -30,7 +30,7 @@ module.exports = (app) => {
 
   app.get("/getTagsByAuthorId/:authorId", blogController.getAuthorTags);
 
-  app.get("/getLatestBlogs", blogController.getAllBlogs);
+  app.post("/getLatestBlogs", blogController.getAllBlogs);
 
   app.get("/getLatestTags", blogController.getLatestTags);
 };

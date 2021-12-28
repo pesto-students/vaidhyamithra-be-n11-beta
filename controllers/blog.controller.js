@@ -62,37 +62,64 @@ const getQuery = (matchCondition) => {
 };
 
 exports.getAllBlogs = async (req, res) => {
-  const blogs = await Blog.aggregate([
-    {
-      $lookup: {
-        from: "users",
-        localField: "authorId",
-        foreignField: "_id",
-        as: "authorDetails",
+  const page = parseInt(req.body.pageNumber);
+  const limit = parseInt(req.body.pageSize);
+  const skipIndex = (page - 1) * limit;
+  try {
+    const blogs = await Blog.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "authorId",
+          foreignField: "_id",
+          as: "authorDetails",
+        },
       },
-    },
-    {
-      $unwind: "$authorDetails",
-    },
-    {
-      $sort: { createdAt: -1 },
-    },
-    {
-      $project: {
-        _id: 1,
-        title: 1,
-        content: 1,
-        authorId: 1,
-        tags: 1,
-        status: 1,
-        createdAt: 1,
-        updatedAt: 1,
-        "authorDetails._id": 1,
-        "authorDetails.name": 1,
+      {
+        $unwind: "$authorDetails",
       },
-    },
-  ]);
-  res.status(200).send(blogs);
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          content: 1,
+          authorId: 1,
+          tags: 1,
+          status: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          "authorDetails._id": 1,
+          "authorDetails.name": 1,
+        },
+      },
+      {
+        $facet: {
+          paginatedResults: [{ $skip: skipIndex }, { $limit: limit }],
+          totalCount: [{ $count: "count" }],
+        },
+      },
+      {
+        $addFields: {
+          totalCount: {
+            $ifNull: [{ $arrayElemAt: ["$totalCount.count", 0] }, 0],
+          },
+        },
+      },
+      {
+        $project: {
+          paginatedResults: 1,
+          totalCount: 1,
+        },
+      },
+    ]);
+
+    res.status(200).send(blogs[0]);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 };
 
 exports.getLatestTags = async (req, res) => {
