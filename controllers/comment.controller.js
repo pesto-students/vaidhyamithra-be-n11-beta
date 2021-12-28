@@ -72,7 +72,7 @@ exports.insertComment = async (req, res) => {
 
 exports.deleteComment = (req, res) => {
   var commentId = requireObjectId(req.params.commentId);
-  Comment.deleteOne({ id: commentId })
+  Comment.deleteOne({ _id: commentId })
     .then(() => {
       res.status(200).send({ message: "Deleted Successfully" });
     })

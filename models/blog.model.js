@@ -5,7 +5,8 @@ const BlogSchema = mongoose.Schema(
     content: String, 
     authorId: {type:mongoose.Schema.ObjectId},
     tags: [String], //Tags should be array of ids 
-    status: String //Check enum in mongodb [draft, published]
+    status: String, //Check enum in mongodb [draft, published]
+    shortContent: String
   },
   {
     timestamps: true,

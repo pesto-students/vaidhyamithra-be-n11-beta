@@ -42,7 +42,7 @@ const getQuery = (matchCondition) => {
       $unwind: "$authorDetails",
     },
     {
-      $sort: { createdAt: -1 }
+      $sort: { createdAt: -1 },
     },
     {
       $project: {
@@ -61,7 +61,7 @@ const getQuery = (matchCondition) => {
   ];
 };
 
-exports.getAllBlogs = async(req,res) => {
+exports.getAllBlogs = async (req, res) => {
   const blogs = await Blog.aggregate([
     {
       $lookup: {
@@ -69,13 +69,13 @@ exports.getAllBlogs = async(req,res) => {
         localField: "authorId",
         foreignField: "_id",
         as: "authorDetails",
-      }
+      },
     },
     {
       $unwind: "$authorDetails",
     },
     {
-      $sort: { createdAt: -1 }
+      $sort: { createdAt: -1 },
     },
     {
       $project: {
@@ -90,10 +90,38 @@ exports.getAllBlogs = async(req,res) => {
         "authorDetails._id": 1,
         "authorDetails.name": 1,
       },
-    }
+    },
   ]);
   res.status(200).send(blogs);
-}
+};
+
+exports.getLatestTags = async (req, res) => {
+  try {
+    const tags = await Blog.aggregate([
+      {
+        $unwind: "$tags",
+      },
+      {
+        $limit: 20,
+      },
+      {
+        $project: {
+          _id: 0,
+          tags: 1,
+        },
+      },
+    ]);
+
+    let values = [];
+    tags.forEach((tag) => {
+      values.push(tag.tags);
+    });
+    let uniqueKeys = [...new Set(values)];
+    res.status(200).send(uniqueKeys);
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+};
 
 exports.getBlogsByTags = async (req, res) => {
   var tags = req.body.tags;
