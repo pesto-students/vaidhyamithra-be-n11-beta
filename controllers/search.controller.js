@@ -5,7 +5,7 @@ exports.search = async (req, res) => {
   const page = parseInt(req.body.pageNumber);
   const limit = parseInt(req.body.pageSize);
   const skipIndex = (page - 1) * limit;
-  var rgx = new RegExp("^"+ searchText);
+  var rgx = new RegExp("^" + searchText);
   try {
     let results = await Blog.aggregate([
       {
@@ -18,6 +18,9 @@ exports.search = async (req, res) => {
             },
           },
         },
+      },
+      {
+        $sort: { createdAt: -1 },
       },
       {
         $lookup: {

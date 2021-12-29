@@ -54,6 +54,7 @@ const getQuery = (matchCondition) => {
         status: 1,
         createdAt: 1,
         updatedAt: 1,
+        description: 1,
         "authorDetails._id": 1,
         "authorDetails.name": 1,
       },
@@ -91,6 +92,7 @@ exports.getAllBlogs = async (req, res) => {
           status: 1,
           createdAt: 1,
           updatedAt: 1,
+          description: 1,
           "authorDetails._id": 1,
           "authorDetails.name": 1,
         },
@@ -127,6 +129,9 @@ exports.getLatestTags = async (req, res) => {
     const tags = await Blog.aggregate([
       {
         $unwind: "$tags",
+      },
+      {
+        $sort: { createdAt: -1 },
       },
       {
         $limit: 20,
@@ -201,6 +206,7 @@ exports.insertBlog = (req, res) => {
     authorId: req.body.authorId,
     tags: req.body.tags,
     status: req.body.status,
+    description: req.body.description
   });
 
   blog
@@ -221,6 +227,7 @@ exports.updateBlog = (req, res) => {
     authorId: req.body.authorId,
     tags: req.body.tags,
     status: req.body.status,
+    description: req.body.description
   });
 
   Blog.findByIdAndUpdate(req.params.blogId, blog, { new: true })
@@ -272,6 +279,7 @@ exports.getSavedBlogs = async (req, res) => {
           _id: 1,
           "blogDetails._id": 1,
           "blogDetails.title": 1,
+          "blogDetails.description":1,
           "blogDetails.content": 1,
           "blogDetails.authorId": 1,
           "blogDetails.tags": 1,
