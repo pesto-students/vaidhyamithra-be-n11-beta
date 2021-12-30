@@ -66,7 +66,7 @@ exports.login = (req, res) => {
       }
 
       var token = jwt.sign({ id: user.id }, keyConfig.secret_key, {
-        expiresIn: 7200,
+        expiresIn: 28800,
       });
 
       res.status(200).send({

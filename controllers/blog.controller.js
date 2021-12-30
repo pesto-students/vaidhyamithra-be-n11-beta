@@ -10,7 +10,7 @@ exports.getBlogById = async (req, res) => {
   }
 
   try {
-    const blog = await Blog.aggregate(getQuery({ _id: blogId }));
+    const blog = await Blog.aggregate(getQuery({ _id: blogId }, true));
     if (blog.length === 0)
       return res
         .status(404)
@@ -25,7 +25,7 @@ const requireObjectId = (id) => {
   return mongoose.Types.ObjectId(id);
 };
 
-const getQuery = (matchCondition) => {
+const getQuery = (matchCondition, requireContent) => {
   return [
     {
       $match: matchCondition,
@@ -45,7 +45,7 @@ const getQuery = (matchCondition) => {
       $sort: { createdAt: -1 },
     },
     {
-      $project: {
+      $project: requireContent ? {
         _id: 1,
         title: 1,
         content: 1,
@@ -57,7 +57,13 @@ const getQuery = (matchCondition) => {
         description: 1,
         "authorDetails._id": 1,
         "authorDetails.name": 1,
-      },
+      }: {
+        content: 0,
+        "authorDetails.password": 0,
+        "authorDetails.email":0,
+        "authorDetails.about":0,
+        "authorDetails.interests":0
+      }
     },
   ];
 };
@@ -86,7 +92,6 @@ exports.getAllBlogs = async (req, res) => {
         $project: {
           _id: 1,
           title: 1,
-          content: 1,
           authorId: 1,
           tags: 1,
           status: 1,
@@ -159,7 +164,7 @@ exports.getBlogsByTags = async (req, res) => {
   var tags = req.body.tags;
   if (!tags) return res.status(500).send({ message: "Not a valid tags" });
   try {
-    const blogs = await Blog.aggregate(getQuery({ tags: { $in: tags } }));
+    const blogs = await Blog.aggregate(getQuery({ tags: { $in: tags } }, false));
     if (!blogs) return res.status(404).send({ message: "Blogs are not found" });
     res.status(200).send(blogs);
   } catch (error) {
@@ -171,7 +176,7 @@ exports.getPublishedBlogsByAuthor = async (req, res) => {
   var authorId = requireObjectId(req.params.authorId);
   try {
     const blogs = await Blog.aggregate(
-      getQuery({ $and: [{ authorId: authorId }, { status: "published" }] })
+      getQuery({ $and: [{ authorId: authorId }, { status: "published" }] }, false)
     );
     if (!blogs)
       return res
@@ -187,7 +192,7 @@ exports.getDraftBlogsByAuthor = async (req, res) => {
   var authorId = requireObjectId(req.params.authorId);
   try {
     const blogs = await Blog.aggregate(
-      getQuery({ $and: [{ authorId: authorId }, { status: "draft" }] })
+      getQuery({ $and: [{ authorId: authorId }, { status: "draft" }] }, false)
     );
     if (!blogs)
       return res
@@ -206,7 +211,7 @@ exports.insertBlog = (req, res) => {
     authorId: req.body.authorId,
     tags: req.body.tags,
     status: req.body.status,
-    description: req.body.description
+    description: req.body.description,
   });
 
   blog
@@ -227,7 +232,7 @@ exports.updateBlog = (req, res) => {
     authorId: req.body.authorId,
     tags: req.body.tags,
     status: req.body.status,
-    description: req.body.description
+    description: req.body.description,
   });
 
   Blog.findByIdAndUpdate(req.params.blogId, blog, { new: true })
@@ -279,8 +284,7 @@ exports.getSavedBlogs = async (req, res) => {
           _id: 1,
           "blogDetails._id": 1,
           "blogDetails.title": 1,
-          "blogDetails.description":1,
-          "blogDetails.content": 1,
+          "blogDetails.description": 1,
           "blogDetails.authorId": 1,
           "blogDetails.tags": 1,
           "blogDetails.status": 1,
