@@ -27,6 +27,7 @@ exports.signUp = async (req, res) => {
     email: req.body.email,
     isDoctor: req.body.isDoctor,
     interests: req.body.interests,
+    imgUrl: req.body.imgUrl,
     password: bcrypt.hashSync(req.body.password, 8),
   });
   // Save User in the database
@@ -42,6 +43,7 @@ exports.signUp = async (req, res) => {
       isDoctor: savedData.isDoctor,
       accessToken: token,
       about: savedData.about,
+      imgUrl: savedData.imgUrl,
       interests: savedData.interests,
     });
   } catch (error) {
@@ -76,6 +78,7 @@ exports.login = (req, res) => {
         isDoctor: user.isDoctor,
         accessToken: token,
         about: user.about,
+        imgUrl: user.imgUrl,
         interests: user.interests
       });
     })
@@ -108,6 +111,7 @@ exports.updateUserDetails = async (req, res) => {
           userName: updatedUserDetails.name,
           email: updatedUserDetails.email,
           about: updatedUserDetails.about,
+          imgUrl: updatedUserDetails.imgUrl,
           isDoctor: updatedUserDetails.isDoctor,
           interests: updatedUserDetails.interests,
         };
@@ -133,6 +137,7 @@ exports.getUserDetails = async (req, res) => {
       userName: user.name,
       email: user.email,
       about: user.about,
+      imgUrl: user.imgUrl,
       isDoctor: user.isDoctor,
       interests: user.interests,
     };

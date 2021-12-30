@@ -5,6 +5,7 @@ const UserSchema = mongoose.Schema({
     password: String,
     isDoctor: Boolean,
     about: String,
+    imgUrl: String,
     interests: [String]
 }, {
     timestamps: true

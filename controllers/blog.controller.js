@@ -55,6 +55,7 @@ const getQuery = (matchCondition, requireContent) => {
         createdAt: 1,
         updatedAt: 1,
         description: 1,
+        imgUrl: 1,
         "authorDetails._id": 1,
         "authorDetails.name": 1,
       }: {
@@ -98,6 +99,7 @@ exports.getAllBlogs = async (req, res) => {
           createdAt: 1,
           updatedAt: 1,
           description: 1,
+          imgUrl: 1,
           "authorDetails._id": 1,
           "authorDetails.name": 1,
         },
@@ -211,6 +213,7 @@ exports.insertBlog = (req, res) => {
     authorId: req.body.authorId,
     tags: req.body.tags,
     status: req.body.status,
+    imgUrl: req.body.imgUrl,
     description: req.body.description,
   });
 
@@ -232,6 +235,7 @@ exports.updateBlog = (req, res) => {
     authorId: req.body.authorId,
     tags: req.body.tags,
     status: req.body.status,
+    imgUrl: req.body.imgUrl,
     description: req.body.description,
   });
 
@@ -290,6 +294,7 @@ exports.getSavedBlogs = async (req, res) => {
           "blogDetails.status": 1,
           "blogDetails.createdAt": 1,
           "blogDetails.updatedAt": 1,
+          "blogDetails.imgUrl":1,
           "blogDetails.authorDetails._id": 1,
           "blogDetails.authorDetails.name": 1,
         },
