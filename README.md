@@ -1,4 +1,5 @@
-# Vaidhyamithra : Backend
+# Vaidhya Mitra : Backend
+
 ## Table of content
  * [Introduction](https://github.com/pesto-students/vaidhyamithra-be-n11-beta/#Introduction)
  * [Technologies](https://github.com/pesto-students/vaidhyamithra-be-n11-beta/#Technologies)
@@ -8,9 +9,9 @@
 ## Introduction
 Vaidhyamithra is a health care blogging platform.
 
--Live demo [here](https://vaidhyamitra.netlify.app/)
+Live demo [here](https://vaidhyamitra.netlify.app/)
 
-Frontned is hosted on Netlify, and Backend is hosted on Heroku.
+Frontend is hosted on [Netlify](https://netlify.com/), and Backend is hosted on [Heroku](https://www.heroku.com/)
 
 ## Technologies
 
