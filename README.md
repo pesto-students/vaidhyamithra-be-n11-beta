@@ -1,10 +1,11 @@
 # Vaidhya Mitra : Backend
 
 ## Table of content
- * [Introduction](https://github.com/pesto-students/vaidhyamithra-be-n11-beta/#Introduction)
- * [Technologies](https://github.com/pesto-students/vaidhyamithra-be-n11-beta/#Technologies)
- * [Setup](https://github.com/pesto-students/vaidhyamithra-be-n11-beta/#Setup)
- * [Contributors](https://github.com/pesto-students/vaidhyamithra-be-n11-beta/#Contributors)
+ * [Introduction](#Introduction)
+ * [Technologies](#Technologies)
+ * [Setup](#Setup)
+ * [Project Artefacts](#project-artefacts)
+ * [Contributors](#Contributors)
 
 ## Introduction
 Vaidhyamithra is a health care blogging platform.
@@ -35,6 +36,13 @@ Verify by navigating to below address in your preferred browser.
 ```bash
  localhost:3553 or running port 
 ```
+
+## Project Artefacts
+
+- [PRD](https://manirathnamchiliveru-1763.slite.com/api/s/note/XPHGrEWYtyFuhbaKCd6EFJ/Vaidhya-Mitra)
+- [HLD](https://miro.com/app/board/uXjVOf8hRH8=/)
+- [Wireframes](https://www.figma.com/file/OuYcaj7M1hyzRQ8pugW8Vz/Pesto-Blog-Project?node-id=17%3A5)
+- [Frontend Repository](https://github.com/pesto-students/vaidhyamithra-fe-n11-beta/)
 
 ## Contributors
 Manirathnam Chiliveru | Dharmit Dosani
