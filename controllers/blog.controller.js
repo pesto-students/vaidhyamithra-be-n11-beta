@@ -102,6 +102,7 @@ exports.getAllBlogs = async (req, res) => {
           imgUrl: 1,
           "authorDetails._id": 1,
           "authorDetails.name": 1,
+          "authorDetails.imgUrl": 1
         },
       },
       {
@@ -295,6 +296,7 @@ exports.getSavedBlogs = async (req, res) => {
           "blogDetails.createdAt": 1,
           "blogDetails.updatedAt": 1,
           "blogDetails.imgUrl":1,
+          "blogDetails.authorDetails.imgUrl":1,
           "blogDetails.authorDetails._id": 1,
           "blogDetails.authorDetails.name": 1,
         },
