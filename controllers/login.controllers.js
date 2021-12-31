@@ -94,6 +94,7 @@ exports.updateUserDetails = async (req, res) => {
   var about = req.body.about;
   var interests = req.body.interests;
   var name = req.body.name;
+  var imgUrl = req.body.imgUrl;
 
   try {
     const user = await User.findById(userId);
@@ -103,7 +104,7 @@ exports.updateUserDetails = async (req, res) => {
         .send({ message: "User not found with the Id:", userId });
     User.updateOne(
       { _id: userId },
-      { $set: { about: about, interests: interests, name: name } }
+      { $set: { about: about, interests: interests, name: name, imgUrl: imgUrl } }
     ).then(() => {
       User.findById(userId).then((updatedUserDetails) => {
         let userInfo = {
