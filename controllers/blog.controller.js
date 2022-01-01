@@ -58,6 +58,7 @@ const getQuery = (matchCondition, requireContent) => {
         imgUrl: 1,
         "authorDetails._id": 1,
         "authorDetails.name": 1,
+        "authorDetails.imgUrl":1
       }: {
         content: 0,
         "authorDetails.password": 0,
