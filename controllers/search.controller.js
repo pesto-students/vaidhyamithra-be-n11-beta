@@ -37,14 +37,16 @@ exports.search = async (req, res) => {
         $project: {
           _id: 1,
           title: 1,
-          content: 1,
+          description: 1,
           authorId: 1,
           tags: 1,
           status: 1,
           createdAt: 1,
           updatedAt: 1,
+          imgUrl: 1,
           "authorDetails._id": 1,
           "authorDetails.name": 1,
+          "authorDetails.imgUrl":1
         },
       },
       {
