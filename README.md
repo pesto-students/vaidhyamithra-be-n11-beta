@@ -1,26 +1,26 @@
 # Vaidhya Mitra : Backend
 
-## Table of content
- * [Introduction](#Introduction)
- * [Technologies](#Technologies)
- * [Setup](#Setup)
- * [Project Artefacts](#project-artefacts)
- * [Contributors](#Contributors)
+# Table of content
+ 1. [Introduction](#introduction)
+ 2. [Technologies](#technologies)
+ 3. [Setup](#setup)
+ 4. [Contributors](#contributors)
+ 5. [License](#license)
 
-## Introduction
+# Introduction
 Vaidhyamithra is a health care blogging platform.
 
 Live demo [here](https://vaidhyamitra.netlify.app/)
 
 Frontend is hosted on [Netlify](https://netlify.com/), and Backend is hosted on [Heroku](https://www.heroku.com/)
 
-## Technologies
+# Technologies
 
 * Node.js 14+
 * Express js 4.17.1
 * Mongoose
 
-## Setup
+# Setup
 
 Require [Node.js](https://nodejs.org/en/) to run (v10+).
 
@@ -37,13 +37,9 @@ Verify by navigating to below address in your preferred browser.
  localhost:3553 or running port 
 ```
 
-## Project Artefacts
-
-- [PRD](https://manirathnamchiliveru-1763.slite.com/api/s/note/XPHGrEWYtyFuhbaKCd6EFJ/Vaidhya-Mitra)
-- [HLD](https://miro.com/app/board/uXjVOf8hRH8=/)
-- [Wireframes](https://www.figma.com/file/OuYcaj7M1hyzRQ8pugW8Vz/Pesto-Blog-Project?node-id=17%3A5)
-- [Frontend Repository](https://github.com/pesto-students/vaidhyamithra-fe-n11-beta/)
-
-## Contributors
+# Contributors
 Manirathnam Chiliveru | Dharmit Dosani
 --------------------- | ---------------
+
+# License
+[MIT](https://opensource.org/licenses/MIT)
