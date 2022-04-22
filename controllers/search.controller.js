@@ -2,7 +2,7 @@ const Blog = require("../models/blog.model");
 
 exports.search = async (req, res) => {
   var searchText = req.body.searchText;
-  const page = parseInt(req.body.pageNumber);
+  const page = parseInt(req.body.pageNumber ?? 1);
   const limit = parseInt(req.body.pageSize);
   const skipIndex = (page - 1) * limit;
   var rgx = new RegExp("^" + searchText);
@@ -46,7 +46,7 @@ exports.search = async (req, res) => {
           imgUrl: 1,
           "authorDetails._id": 1,
           "authorDetails.name": 1,
-          "authorDetails.imgUrl":1
+          "authorDetails.imgUrl": 1,
         },
       },
       {
